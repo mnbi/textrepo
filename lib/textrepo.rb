@@ -1,6 +1,6 @@
-require "textrepo/version"
-
 module Textrepo
-  class Error < StandardError; end
-  # Your code goes here...
+  require_relative 'textrepo/version'
+  require_relative 'textrepo/error'
+  require_relative 'textrepo/timestamp'
+  require_relative 'textrepo/repository'
 end
