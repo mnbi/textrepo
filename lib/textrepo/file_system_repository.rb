@@ -39,6 +39,7 @@ module Textrepo
     def create(timestamp, text)
       abs = abspath(timestamp)
       raise DuplicateTimestampError, timestamp if FileTest.exist?(abs)
+      raise EmptyTextError if text.nil? || text.empty?
 
       write_text(abs, text)
       timestamp

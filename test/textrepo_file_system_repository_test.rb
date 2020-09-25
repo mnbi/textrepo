@@ -91,6 +91,15 @@ class TextrepoFileSystemRepositoryTest < Minitest::Test
     }
   end
 
+  def test_it_fails_to_create_with_empty_text
+    repo = Textrepo::FileSystemRepository.new(@config_rw)
+    stamp = Textrepo::Timestamp.new(Time.new(2020, 1, 2, 0, 0, 2))
+    text = []
+    assert_raises(Textrepo::EmptyTextError) {
+      repo.create(stamp, text)
+    }
+  end
+
   # for `read(timestamp)`
   def test_it_can_read_the_content_of_text_in_the_repository
     repo = Textrepo::FileSystemRepository.new(@config_ro)
