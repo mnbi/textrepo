@@ -111,12 +111,12 @@ class TextrepoFileSystemRepositoryTest < Minitest::Test
   def test_it_can_update_the_content_of_text_in_the_repository
     repo_rw = Textrepo::FileSystemRepository.new(@config_rw)
 
-    stamp = Textrepo::Timestamp.new(Time.new(2020, 1, 1, 1, 0, 0))
+    org_stamp = Textrepo::Timestamp.new(Time.new(2020, 1, 1, 1, 0, 0))
     text = ['content', 'was', 'updated']
-    s = repo_rw.update(stamp, text)
-    assert_equal stamp, s
+    new_stamp = repo_rw.update(org_stamp, text)
+    refute_equal org_stamp, new_stamp
 
-    newpath = File.expand_path(stamp.to_pathname + '.md', repo_rw.path)
+    newpath = File.expand_path(new_stamp.to_pathname + '.md', repo_rw.path)
     content = nil
     File.open(newpath, 'r') { |f|
       content = f.readlines(chomp: true)

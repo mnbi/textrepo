@@ -56,14 +56,22 @@ module Textrepo
       content
     end
 
-    # Updates the file content in the repository.
+    # Updates the file content in the repository.  A new timestamp
+    # will be attached to the text.
     def update(timestamp, text)
       raise EmptyTextError if text.empty?
-      abs = abspath(timestamp)
-      raise MissingTimestampError, timestamp unless FileTest.exist?(abs)
+      org_abs = abspath(timestamp)
+      raise MissingTimestampError, timestamp unless FileTest.exist?(org_abs)
 
-      write_text(abs, text)
-      timestamp
+      # the text must be stored with the new timestamp
+      new_stamp = Timestamp.new(Time.now)
+      new_abs = abspath(new_stamp)
+      write_text(new_abs, text)
+
+      # delete the original file in the repository
+      FileUtils.remove_file(org_abs)
+
+      new_stamp
     end
 
     # Deletes the file in the repository.
