@@ -25,8 +25,9 @@ files.each { |abspath|
   dd   = "%02d" % t.day
   hhmmss = "%02d%02d%02d" % [t.hour, t.min, t.sec]
 
-  dirname = File.expand_path("#{yyyy}/#{mm}", repo_path)
-  dest = "#{dirname}/#{yyyy}#{mm}#{dd}#{hhmmss}#{File.extname(abspath)}"
+  dirname = File.expand_path(t.strftime("%Y/%m"), repo_path)
+  basename = t.strftime("%Y%m%d%H%M%S_%L")
+  dest = "#{dirname}/#{basename}#{File.extname(abspath)}"
 
   FileUtils.mkdir_p(dirname)
   FileUtils.copy_file(abspath, dest) unless FileTest.exist?(dest) && FileUtils.cmp(abspath, dest)

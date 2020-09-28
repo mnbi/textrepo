@@ -10,29 +10,30 @@ module Textrepo
       self.to_s <=> other.to_s
     end
 
-    # "2020-12-30 12:34:56" => "20201230123456"
+    #  %Y   %m %d %H %M %S  %L
+    # "2020-12-30 12:34:56 (0.789)" => "20201230123456_789"
     def to_s
-      @time.to_s[0, 19].gsub(/[- :]/, '')
+      @time.strftime("%Y%m%d%H%M%S_%L")
     end
 
-    #  yyyymoddhhmiss      yyyy mo
-    # "20201230123456" => "2020/12/"20201230123456"
+    #  %Y   %m %d %H %M %S  %L            %Y/%m/  %Y%m%d%H%M%S %L
+    # "2020-12-30 12:34:56 (0.789)" => "2020/12/20201230123456_789"
     def to_pathname
-      yyyy, mo, dd, hh, mi, ss = Timestamp.split_stamp(self.to_s)
-      "#{yyyy}/#{mo}/#{yyyy}#{mo}#{dd}#{hh}#{mi}#{ss}"
+      @time.strftime("%Y/%m/%Y%m%d%H%M%S_%L")
     end
 
     class << self
-      #  yyyymoddhhmiss      yyyy    mo    dd    hh    mi    ss
-      # "20201230123456" => "2020", "12", "30", "12", "34", "56"
+      #  yyyymoddhhmiss lll      yyyy    mo    dd    hh    mi    ss    lll
+      # "20201230123456_789" => "2020", "12", "30", "12", "34", "56", "789"
       def split_stamp(stamp_str)
-        [0..3, 4..5, 6..7, 8..9, 10..11, 12..13].map {|r| stamp_str[r]}
+        #yyyy  mo    dd    hh    mi      ss      lll
+        [0..3, 4..5, 6..7, 8..9, 10..11, 12..13, 15..17].map {|r| stamp_str[r]}
       end
 
-      # "20201230123456" => "2020-12-30 12:34:56"
       def parse_s(stamp_str)
-        year, mon, day, hour, min, sec = split_stamp(stamp_str).map(&:to_i)
-        Timestamp.new(Time.new(year, mon, day, hour, min, sec))
+        year, mon, day, hour, min, sec , msec = split_stamp(stamp_str).map(&:to_i)
+        basetime = Time.new(year, mon, day, hour, min, sec)
+        Timestamp.new(Time.at(basetime.to_i, msec))
       end
 
       # "2020/12/20201230123456" => "2020-12-30 12:34:56"

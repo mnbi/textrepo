@@ -10,13 +10,13 @@ class TextrepoTimestampTest < Minitest::Test
   def test_it_can_generate_string
     time = Time.new(2020, 1, 1, 0, 0, 1)
     stamp = Textrepo::Timestamp.new(time)
-    assert_equal '20200101000001', stamp.to_s
+    assert_equal '20200101000001_000', stamp.to_s
   end
 
   def test_it_can_generate_pathname
     time = Time.new(2020, 1, 1, 0, 0, 2)
     stamp = Textrepo::Timestamp.new(time)
-    assert_equal '2020/01/20200101000002', stamp.to_pathname
+    assert_equal '2020/01/20200101000002_000', stamp.to_pathname
   end
 
   def test_it_is_comparable

@@ -45,7 +45,7 @@ class TextrepoFileSystemRepositoryTest < Minitest::Test
 
   def test_it_has_default_name_value
     expected = 'notes'
-    config = @config_ro.clone
+    config = @config_rw.clone
     config.delete(:repository_name)
     repo = Textrepo::FileSystemRepository.new(config)
     assert_equal expected, repo.name
@@ -71,7 +71,7 @@ class TextrepoFileSystemRepositoryTest < Minitest::Test
     stamp = Textrepo::Timestamp.new(Time.new(2020, 1, 2, 0, 0, 0))
     text = ['apple', 'orange', 'grape']
     repo.create(stamp, text)
-    filepath = [repo.path, "2020/01/20200102000000.md"].join('/')
+    filepath = [repo.path, "2020/01/20200102000000_000.md"].join('/')
     assert FileTest.exist?(filepath)
 
     content = nil
