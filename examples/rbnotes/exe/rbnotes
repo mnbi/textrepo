@@ -1,0 +1,69 @@
+#!/usr/bin/env ruby
+
+$LOAD_PATH.unshift File.expand_path("../../../lib", __dir__)
+$LOAD_PATH.unshift File.expand_path("../lib", __dir__)
+
+require "rbnotes"
+require "optparse"
+
+DEBUG = true
+
+module Rbnotes
+  class App
+    class << self
+      def usage
+        prog_name = File.basename($PROGRAM_NAME)
+        <<USAGE
+#{prog_name} is a tool to take a note.  All notes are stored into a
+single repository with a timestamp.
+
+  Usage: #{prog_name} [options] command [cmd_options] [args]
+      -h, --help
+      -v, --version
+
+  Commands:
+USAGE
+      end
+
+      def default_config
+        {
+          :repository_type => :file_system,
+          :repository_name => DEBUG ? "sandbox/notes_dev" : "notes",
+          :repository_base => File.expand_path("~"),
+        }
+      end
+    end
+
+    attr_reader :name, :opts, :config
+
+    def initialize(name, config)
+      @name = name
+      @opts = {}
+      @config = config || self.class.default_config
+    end
+  end
+end
+
+config = nil
+app = Rbnotes::App.new(File.basename($PROGRAM_NAME), config)
+
+p = OptionParser.new(Rbnotes::App.usage)
+p.version = Rbnotes::VERSION
+p.release = Rbnotes::RELEASE
+p.order!(ARGV)
+
+if ARGV.empty?
+  STDERR.puts p.help
+  exit 0
+end
+
+cmd_name = ARGV.shift
+cli = Rbnotes::CLI.instance
+begin
+  cmd = cli.load(cmd_name, app)
+rescue Rbnotes::UnknownCommandError => e
+  STDERR.puts e.message
+  exit 1
+end
+
+cmd.execute(ARGV)
