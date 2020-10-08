@@ -1,7 +1,7 @@
 module Rbnotes
-  class UnknownCommandError < Error
+  class CommandNameError < Error
     def initialize(name)
-      super "no such command: %s" % name
+      super "not found such command: %s" % name
     end
   end
 end

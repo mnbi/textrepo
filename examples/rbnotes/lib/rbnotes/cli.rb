@@ -1,14 +1,11 @@
 module Rbnotes
-  class CLI
-    class << self
-      def instance
-        @cli ||= new
-      end
+  module CLI
+    def get_global_opts(args)
+      {}
     end
 
-    def load(name, parent)
-      Commands::Command.new(name, parent)
+    def get_cmd_name(args, opts)
+      args.shift
     end
-
   end
 end
