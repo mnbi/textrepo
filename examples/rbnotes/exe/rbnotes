@@ -9,14 +9,8 @@ DEBUG = true
 
 module Rbnotes
   class App
-    include CLI
-
-    def initialize(conf_file = nil)
-      unless conf_file
-        @conf = default_conf
-      else
-        # ... load configuration file
-      end
+    def initialize
+      @conf = default_conf
     end
 
     def default_conf
@@ -24,17 +18,16 @@ module Rbnotes
         :repository_type => :file_system,
         :repository_name => DEBUG ? "sandbox/notes_dev" : "notes",
         :repository_base => File.expand_path("~"),
+        :pager => "bat",
       }
     end
 
     def run(args)
-      opts = get_global_opts(args)
-      cmd = get_cmd_name(args, opts)
-
-      Rbnotes::Commands.load(cmd, @conf[:plugins]).execute(args, @conf)
+      cmd = args.shift
+      Rbnotes::Commands.load(cmd).execute(args, @conf)
     end
   end
 end
 
-app = Rbnotes::App.new(nil)
+app = Rbnotes::App.new
 app.run(ARGV)
