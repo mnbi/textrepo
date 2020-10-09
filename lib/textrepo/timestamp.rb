@@ -33,7 +33,7 @@ module Textrepo
       def parse_s(stamp_str)
         year, mon, day, hour, min, sec , msec = split_stamp(stamp_str).map(&:to_i)
         basetime = Time.new(year, mon, day, hour, min, sec)
-        Timestamp.new(Time.at(basetime.to_i, msec))
+        Timestamp.new(Time.at(basetime.to_i, msec, :millisecond))
       end
 
       # "2020/12/20201230123456" => "2020-12-30 12:34:56"
