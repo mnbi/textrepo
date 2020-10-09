@@ -3,7 +3,7 @@ module Rbnotes
     def execute(args, conf)
       file = args.shift
       unless file.nil?
-        st = File::Stat::new(file)
+        st = File::Stat.new(file)
         btime = st.respond_to?(:birthtime) ? st.birthtime : st.mtime
         stamp = Textrepo::Timestamp.new(btime)
         puts "Import [%s] (timestamp [%s]) ..." % [file, stamp]
