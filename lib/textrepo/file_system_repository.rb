@@ -86,6 +86,37 @@ module Textrepo
       content
     end
 
+    # Finds notes those timestamp matches the specified pattern.
+    def notes(stamp_pattern = nil)
+      results = []
+
+      case stamp_pattern.to_s.size
+      when "yyyymoddhhmiss_lll".size
+        stamp = Timestamp.parse_s(stamp_pattern)
+        if exist?(stamp)
+          results << stamp.to_s
+        end
+      when 0, "yyyymoddhhmiss".size, "yyyymodd".size
+        results += find_notes(stamp_pattern)
+      when 4                    # "yyyy" or "modd"
+        pat = nil
+        # The following distinction is practically correct, but not
+        # perfect.  It simply assumes that a year is greater than
+        # 1231.  For, a year before 1232 is too old for us to create a
+        # note (I believe...).
+        if stamp_pattern.to_i > 1231
+          # yyyy
+          pat = stamp_pattern
+        else
+          # modd
+          pat = "*#{stamp_pattern}"
+        end
+        results += find_notes(pat)
+      end
+
+      results
+    end
+
     private
     def abspath(timestamp)
       filename = timestamp.to_pathname + ".#{@extname}"
@@ -98,5 +129,20 @@ module Textrepo
         text.each {|line| f.puts(line) }
       }
     end
+
+    def timestamp_str(notepath)
+      File.basename(notepath).delete_suffix(".#{@extname}")
+    end
+
+    def exist?(timestamp)
+      FileTest.exist?(abspath(timestamp))
+    end
+
+    def find_notes(stamp_pattern)
+      Dir.glob("#{@path}/**/#{stamp_pattern}*.#{@extname}").map { |e|
+        timestamp_str(e)
+      }
+    end
+
   end
 end

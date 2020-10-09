@@ -177,4 +177,56 @@ class TextrepoFileSystemRepositoryTest < Minitest::Test
       repo_rw.delete(stamp)
     }
   end
+
+  # for `notes(stamp_pattern)`
+  def test_it_can_get_a_list_of_notes_without_args
+    repo = Textrepo::FileSystemRepository.new(@config_ro)
+    notes = repo.notes
+    refute_nil notes
+    assert_equal 3, notes.size
+    assert notes.include?("20200101010000_000")
+    assert notes.include?("20200101010001_000")
+    assert notes.include?("20200101010002_000")
+  end
+
+  def test_it_can_get_a_list_with_a_full_timestamp_str
+    repo = Textrepo::FileSystemRepository.new(@config_ro)
+    stamp_str = "2020-01-01 01:00:00_000".delete("- :")
+    notes = repo.notes(stamp_str)
+    assert_equal 1, notes.size
+    assert notes.include?(stamp_str)
+  end
+
+  def test_it_can_get_a_list_with_a_yyyymoddhhmiss_pattern
+    repo = Textrepo::FileSystemRepository.new(@config_ro)
+    pattern = "2020-01-01 01:00:01".delete("- :")
+    notes = repo.notes(pattern)
+    assert_equal 1, notes.size
+    assert notes.reduce(false) {|r, e| r ||= e.include?(pattern)}
+  end
+
+  def test_it_can_get_a_list_with_a_yyyymodd_pattern
+    repo = Textrepo::FileSystemRepository.new(@config_ro)
+    pattern = "2020-01-01".delete("-")
+    notes = repo.notes(pattern)
+    assert_equal 3, notes.size
+    assert notes.reduce(false) {|r, e| r ||= e.include?(pattern)}
+  end
+
+  def test_it_can_get_a_list_with_a_yyyy_pattern
+    repo = Textrepo::FileSystemRepository.new(@config_ro)
+    pattern = "2020"
+    notes = repo.notes(pattern)
+    assert_equal 3, notes.size
+    assert notes.reduce(false) {|r, e| r ||= e.include?(pattern)}
+  end
+
+  def test_it_can_get_a_list_with_a_modd_pattern
+    repo = Textrepo::FileSystemRepository.new(@config_ro)
+    pattern = "0101"
+    notes = repo.notes(pattern)
+    assert_equal 3, notes.size
+    assert notes.reduce(false) {|r, e| r ||= e.include?(pattern)}
+  end
+
 end

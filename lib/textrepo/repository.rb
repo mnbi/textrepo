@@ -23,6 +23,22 @@ module Textrepo
     # the timestamp.  Returns an array which contains the deleted text.
     def delete(timestamp); []; end
 
+    # Finds all notes those have timestamps which mathes the specified
+    # pattern of timestamp.  Returns an array which contains
+    # timestamps.  A pattern must be one of the following:
+    #
+    #     - yyyymoddhhmiss_lll : whole stamp
+    #     - yyyymoddhhmiss     : omit millisecond part
+    #     - yyyymodd           : date part only
+    #     - yyyymo             : month and year
+    #     - yyyy               : year only
+    #     - modd               : month and day
+    #
+    # If `stamp_pattern` is omitted, the recent notes will be listed.
+    # Then, how many notes are listed depends on the implementaiton of
+    # the concrete repository class.
+    def notes(stamp_pattern = nil); []; end
+
   end
 
   require_relative 'file_system_repository'
