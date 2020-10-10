@@ -1,28 +1,24 @@
 # Textrepo
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/textrepo`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Textrepo is a repository to store a note with a timestamp.  Each note
+in the repository operates with the associated timestamp.
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'textrepo'
+gem 'textrepo', github: 'mnbi/textrepo.git', branch: 'main'
 ```
 
 And then execute:
 
     $ bundle install
 
-Or install it yourself as:
-
-    $ gem install textrepo
-
 ## Usage
 
-TODO: Write usage instructions here
+See `examples` directory.  There is a small sample tool to demonstrate
+how to use `textrepo`.
 
 ## Development
 
@@ -32,7 +28,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/textrepo.
+Bug reports and pull requests are welcome on GitHub at https://github.com/mnbi/textrepo.
 
 
 ## License
