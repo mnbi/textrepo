@@ -18,7 +18,7 @@ module Rbnotes
 usage: rbnotes [command] [args]
 
 command:
-    inport FILE     : import a FILE into the repository
+    import FILE     : import a FILE into the repository
     list NUM        : list NUM notes
     show STAMP      : show the note specified with STAMP
 
