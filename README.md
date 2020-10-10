@@ -10,7 +10,7 @@ in the repository operates with the associated timestamp.
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'textrepo', github: 'mnbi/textrepo.git', branch: 'main'
+gem 'textrepo', github: 'mnbi/textrepo', branch: 'main'
 ```
 
 And then execute:
