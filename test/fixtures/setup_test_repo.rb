@@ -9,7 +9,7 @@ files = Dir.entries(SAMPLE_TEXT_DIR).filter_map { |e|
   e if FileTest.file?(e)
 }
 
-year, month, day, hour, min, sec = [2020, 1, 1, 1, 0, 0]
+year, month, day, hour, min, sec, suffix = [2020, 1, 1, 1, 0, 0, 123]
 
 def min(x, y); x <= y ? x : y; end
 
@@ -26,9 +26,12 @@ files.each { |abspath|
   hhmmss = "%02d%02d%02d" % [t.hour, t.min, t.sec]
 
   dirname = File.expand_path(t.strftime("%Y/%m"), repo_path)
-  basename = t.strftime("%Y%m%d%H%M%S_%L")
+  basename = t.strftime("%Y%m%d%H%M%S")
   dest = "#{dirname}/#{basename}#{File.extname(abspath)}"
+  dest_with_suffix = 
+    "#{dirname}/#{basename}_#{"%03u" % suffix}#{File.extname(abspath)}"
 
   FileUtils.mkdir_p(dirname)
   FileUtils.copy_file(abspath, dest) unless FileTest.exist?(dest) && FileUtils.cmp(abspath, dest)
+  FileUtils.copy_file(abspath, dest_with_suffix) unless FileTest.exist?(dest_with_suffix) && FileUtils.cmp(abspath, dest_with_suffix)
 }
