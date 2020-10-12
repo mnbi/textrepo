@@ -19,7 +19,42 @@ And then execute:
 
 ## Usage
 
-See `examples` directory.  There is a small sample tool to demonstrate
+Here is a very short sample to use `textrepo`.  It will make
+`~/textrepo_sample` directory and store some text into it.
+
+``` ruby
+#!/usr/bin/env ruby
+
+require "textrepo"
+
+conf = {
+  :repository_type => :file_system,
+  :repository_name => "textrepo_sample",
+  :repository_base => File.expand_path("~"),
+}
+
+repo = Textrepo.init(conf)
+
+t0 = Time.now
+
+stamps = []
+stamps << repo.create(Textrepo::Timestamp.new(t0), ["jan", "feb", "mar"])
+stamps << repo.create(Textrepo::Timestamp.new(t0, 1), ["apr", "may", "jun"])
+stamps << repo.create(Textrepo::Timestamp.new(t0, 2), ["jul", "aug", "sep"])
+stamps << repo.create(Textrepo::Timestamp.new(t0, 3), ["oct", "nov", "dec"])
+
+entries = repo.notes
+puts entries
+
+stamps.each { |stamp|
+  text = repo.read(stamp)
+  puts "----"
+  puts stamp
+  puts text
+}
+```
+
+Also see `examples` directory.  There is a small tool to demonstrate
 how to use `textrepo`.
 
 ## Development
