@@ -8,7 +8,7 @@ module Textrepo
     FAVORITE_REPOSITORY_NAME = 'notes'
     FAVORITE_EXTNAME = 'md'
 
-    # `config` must be a Hash object.  It should hold the follwoing
+    # `conf` must be a Hash object.  It must hold the follwoing
     # values:
     #
     # - :repository_type (:file_system)
@@ -17,17 +17,17 @@ module Textrepo
     # - :default_extname => extname for a file stored into in the repository
     #
     # The root path of the repository looks like the following:
-    # - config[:repository_base]/config[:repository_name]
+    # - conf[:repository_base]/conf[:repository_name]
     # 
     # Default values are set when `repository_name` and `default_extname`
-    # were not defined in `config`.
-    def initialize(config)
+    # were not defined in `conf`.
+    def initialize(conf)
       super
-      base = config[:repository_base]
+      base = conf[:repository_base]
       @name ||= FAVORITE_REPOSITORY_NAME
       @path = File.expand_path("#{name}", base)
       FileUtils.mkdir_p(@path)
-      @extname = config[:default_extname] || FAVORITE_EXTNAME
+      @extname = conf[:default_extname] || FAVORITE_EXTNAME
     end
 
     #
@@ -86,8 +86,8 @@ module Textrepo
       content
     end
 
-    # Finds notes those timestamp matches the specified pattern.
-    def notes(stamp_pattern = nil)
+    # Finds entries of text those timestamp matches the specified pattern.
+    def entries(stamp_pattern = nil)
       results = []
 
       case stamp_pattern.to_s.size
@@ -97,13 +97,13 @@ module Textrepo
           results << stamp.to_s
         end
       when 0, "yyyymoddhhmiss".size, "yyyymodd".size
-        results += find_notes(stamp_pattern)
+        results += find_entries(stamp_pattern)
       when 4                    # "yyyy" or "modd"
         pat = nil
         # The following distinction is practically correct, but not
         # perfect.  It simply assumes that a year is greater than
-        # 1231.  For, a year before 1232 is too old for us to create a
-        # note (I believe...).
+        # 1231.  For, a year before 1232 is too old for us to create
+        # any text (I believe...).
         if stamp_pattern.to_i > 1231
           # yyyy
           pat = stamp_pattern
@@ -111,7 +111,7 @@ module Textrepo
           # modd
           pat = "*#{stamp_pattern}"
         end
-        results += find_notes(pat)
+        results += find_entries(pat)
       end
 
       results
@@ -130,15 +130,15 @@ module Textrepo
       }
     end
 
-    def timestamp_str(notepath)
-      File.basename(notepath).delete_suffix(".#{@extname}")
+    def timestamp_str(text_path)
+      File.basename(text_path).delete_suffix(".#{@extname}")
     end
 
     def exist?(timestamp)
       FileTest.exist?(abspath(timestamp))
     end
 
-    def find_notes(stamp_pattern)
+    def find_entries(stamp_pattern)
       Dir.glob("#{@path}/**/#{stamp_pattern}*.#{@extname}").map { |e|
         timestamp_str(e)
       }

@@ -2,9 +2,9 @@ module Textrepo
   class Repository
     attr_reader :type, :name
 
-    def initialize(config)
-      @type = config[:repository_type]
-      @name = config[:repository_name]
+    def initialize(conf)
+      @type = conf[:repository_type]
+      @name = conf[:repository_name]
     end
 
     # Stores text data into the repository with the specified timestamp.
@@ -23,8 +23,8 @@ module Textrepo
     # the timestamp.  Returns an array which contains the deleted text.
     def delete(timestamp); []; end
 
-    # Finds all notes those have timestamps which mathes the specified
-    # pattern of timestamp.  Returns an array which contains
+    # Finds all entries of text those have timestamps which mathes the
+    # specified pattern of timestamp.  Returns an array which contains
     # timestamps.  A pattern must be one of the following:
     #
     #     - yyyymoddhhmiss_lll : whole stamp
@@ -34,25 +34,29 @@ module Textrepo
     #     - yyyy               : year only
     #     - modd               : month and day
     #
-    # If `stamp_pattern` is omitted, the recent notes will be listed.
-    # Then, how many notes are listed depends on the implementaiton of
-    # the concrete repository class.
-    def notes(stamp_pattern = nil); []; end
+    # If `stamp_pattern` is omitted, the recent entries will be listed.
+    # Then, how many entries are listed depends on the implementaiton
+    # of the concrete repository class.
+    def entries(stamp_pattern = nil); []; end
 
   end
 
   require_relative 'file_system_repository'
 
-  def init(config)
-    type = config[:repository_type]
-    cname = type.to_s.split(/_/).map(&:capitalize).join + "Repository"
-    repo_generator = "#{cname}.new(config)"
-
-    begin
-      eval repo_generator
-    rescue 
+  # Returns an instance which derived from Textrepo::Repository class.
+  # `conf` must be a Hash object which has a value of
+  # `:repository_type` and `:repository_name` at least.  Some concrete
+  # class derived from Textrepo::Repository may require more key-value
+  # pairs in `conf`.
+  def init(conf)
+    type = conf[:repository_type]
+    klass_name = type.to_s.split(/_/).map(&:capitalize).join + "Repository"
+    if Textrepo.const_defined?(klass_name)
+      klass = Textrepo.const_get(klass_name, false)
+    else
       raise UnknownRepoTypeError, type.nil? ? "(nil)" : type
     end
+    klass.new(conf)
   end
   module_function :init
 end

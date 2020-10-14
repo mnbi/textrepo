@@ -288,54 +288,41 @@ class TextrepoFileSystemRepositoryTest < Minitest::Test
   end
 
   # for `notes(stamp_pattern)`
-  def test_it_can_get_a_list_of_notes_without_args
+  def test_it_can_get_a_list_of_text_without_args
     repo = Textrepo::FileSystemRepository.new(@config_ro)
-    notes = repo.notes
-    refute_nil notes
-    assert_equal 6, notes.size
-    assert notes.include?("20200101010000")
-    assert notes.include?("20200101010001")
-    assert notes.include?("20200101010002")
+    entries = repo.entries
+    refute_nil entries
+    assert_equal 6, entries.size
+    assert entries.include?("20200101010000")
+    assert entries.include?("20200101010001")
+    assert entries.include?("20200101010002")
   end
 
   def test_it_can_get_a_list_with_a_full_timestamp_str
-    repo = Textrepo::FileSystemRepository.new(@config_ro)
-    stamp_str = "2020-01-01 01:00:00".delete("- :")
-    notes = repo.notes(stamp_str)
-    assert_equal 2, notes.size
-    assert notes.include?(stamp_str)
+    assert_entries_pattern("2020-01-01 01:00:00".delete("- :"), 2)
   end
 
   def test_it_can_get_a_list_with_a_yyyymoddhhmiss_pattern
-    repo = Textrepo::FileSystemRepository.new(@config_ro)
-    pattern = "2020-01-01 01:00:01".delete("- :")
-    notes = repo.notes(pattern)
-    assert_equal 2, notes.size
-    assert notes.reduce(false) {|r, e| r ||= e.include?(pattern)}
+    assert_entries_pattern("2020-01-01 01:00:01".delete("- :"), 2)
   end
 
   def test_it_can_get_a_list_with_a_yyyymodd_pattern
-    repo = Textrepo::FileSystemRepository.new(@config_ro)
-    pattern = "2020-01-01".delete("-")
-    notes = repo.notes(pattern)
-    assert_equal 6, notes.size
-    assert notes.reduce(false) {|r, e| r ||= e.include?(pattern)}
+    assert_entries_pattern("2020-01-01".delete("-"), 6)
   end
 
   def test_it_can_get_a_list_with_a_yyyy_pattern
-    repo = Textrepo::FileSystemRepository.new(@config_ro)
-    pattern = "2020"
-    notes = repo.notes(pattern)
-    assert_equal 6, notes.size
-    assert notes.reduce(false) {|r, e| r ||= e.include?(pattern)}
+    assert_entries_pattern("2020", 6)
   end
 
   def test_it_can_get_a_list_with_a_modd_pattern
-    repo = Textrepo::FileSystemRepository.new(@config_ro)
-    pattern = "0101"
-    notes = repo.notes(pattern)
-    assert_equal 6, notes.size
-    assert notes.reduce(false) {|r, e| r ||= e.include?(pattern)}
+    assert_entries_pattern("0101", 6)
   end
 
+  private
+  def assert_entries_pattern(pattern, num)
+    repo = Textrepo::FileSystemRepository.new(@config_ro)
+    entries = repo.entries(pattern)
+    assert_equal num, entries.size
+    assert entries.reduce(false) {|r, e| r ||= e.include?(pattern)}
+  end
 end
