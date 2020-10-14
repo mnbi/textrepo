@@ -6,13 +6,11 @@ Gem::Specification.new do |spec|
   spec.authors       = ["mnbi"]
   spec.email         = ["mnbi@users.noreply.github.com"]
 
-  spec.summary       = %q{Textrepo is a repository to store text with timestamp.}
-  spec.description   = %q{Textrepo is a repository to store text with timestamp.}
+  spec.summary       = %q{A repository to store text with timestamp.}
+  spec.description   = %q{Textrepo is a repository to store text with timestamp.  It can manage text with the attached timestamp (read/update/delte).}
   spec.homepage      = "https://github.com/mnbi/textrepo"
   spec.license       = "MIT"
   spec.required_ruby_version = Gem::Requirement.new(">= 2.7.0")
-
-  spec.metadata["allowed_push_host"] = "TODO: Set to 'http://mygemserver.com'"
 
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = "https://github.com/mnbi/textrepo"
