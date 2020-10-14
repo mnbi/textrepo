@@ -10,12 +10,16 @@ in the repository operates with the associated timestamp.
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'textrepo', github: 'mnbi/textrepo', branch: 'main'
+gem 'textrepo'
 ```
 
 And then execute:
 
     $ bundle install
+
+Or install it yourself as:
+
+    $ gem install textrepo
 
 ## Usage
 
