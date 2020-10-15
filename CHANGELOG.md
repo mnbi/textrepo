@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 Nothing to record here.
 
+## [0.4.0] - 2020-10-14
+### Added
+- Released to rubygems.org.
+
+### Changed
+- Rename the method, `Repository#notes` to `entries`.
+- Modify the instruction to install
+
 ## [0.3.0] - 2020-10-11
 ### Added
 - Go public onto GitHub.
