@@ -22,12 +22,13 @@ class TextrepoFileSystemRepositoryTest < Minitest::Test
 
     repo_rw_path = File.expand_path(@config_rw[:repository_name],
                                     @config_rw[:repository_base])
-    dst = File.expand_path(stamp.to_pathname + '.md', repo_rw_path)
-    dst_sfx = File.expand_path(stmp_sfx.to_pathname + '.md', repo_rw_path)
+    dst = File.expand_path(timestamp_to_pathname(stamp) + '.md', repo_rw_path)
+    dst_sfx = File.expand_path(timestamp_to_pathname(stmp_sfx) + '.md',
+                               repo_rw_path)
 
     repo_ro_path = File.expand_path(@config_ro[:repository_name],
                                     @config_ro[:repository_base])
-    src = File.expand_path(stamp.to_pathname + '.md', repo_ro_path)
+    src = File.expand_path(timestamp_to_pathname(stamp) + '.md', repo_ro_path)
 
     FileUtils.mkdir_p(File.dirname(dst))
     FileUtils.copy_file(src, dst)
@@ -180,7 +181,7 @@ class TextrepoFileSystemRepositoryTest < Minitest::Test
     new_stamp = repo_rw.update(org_stamp, text)
     refute_equal org_stamp, new_stamp
 
-    newpath = File.expand_path(new_stamp.to_pathname + '.md', repo_rw.path)
+    newpath = File.expand_path(timestamp_to_pathname(new_stamp) + '.md', repo_rw.path)
     content = nil
     File.open(newpath, 'r') { |f|
       content = f.readlines(chomp: true)
@@ -197,7 +198,7 @@ class TextrepoFileSystemRepositoryTest < Minitest::Test
     new_stamp = repo_rw.update(org_stamp, text)
     refute_equal org_stamp, new_stamp
 
-    newpath = File.expand_path(new_stamp.to_pathname + '.md', repo_rw.path)
+    newpath = File.expand_path(timestamp_to_pathname(new_stamp) + '.md', repo_rw.path)
     content = nil
     File.open(newpath, 'r') { |f|
       content = f.readlines(chomp: true)
@@ -241,7 +242,7 @@ class TextrepoFileSystemRepositoryTest < Minitest::Test
     repo_rw = Textrepo::FileSystemRepository.new(@config_rw)
 
     stamp = Textrepo::Timestamp.new(Time.new(2020, 1, 1, 1, 0, 0))
-    path = File.expand_path(stamp.to_pathname + '.md', repo_rw.path)
+    path = File.expand_path(timestamp_to_pathname(stamp) + '.md', repo_rw.path)
 
     expected = []
     File.open(path, 'r') { |f| expected = f.readlines(chomp: true) }
@@ -257,7 +258,7 @@ class TextrepoFileSystemRepositoryTest < Minitest::Test
 
     suffix = 88
     stamp = Textrepo::Timestamp.new(Time.new(2020, 1, 1, 1, 0, 0), suffix)
-    path = File.expand_path(stamp.to_pathname + '.md', repo_rw.path)
+    path = File.expand_path(timestamp_to_pathname(stamp) + '.md', repo_rw.path)
 
     expected = []
     File.open(path, 'r') { |f| expected = f.readlines(chomp: true) }
@@ -324,5 +325,10 @@ class TextrepoFileSystemRepositoryTest < Minitest::Test
     entries = repo.entries(pattern)
     assert_equal num, entries.size
     assert entries.reduce(false) {|r, e| r ||= e.include?(pattern)}
+  end
+
+  def timestamp_to_pathname(timestamp)
+    yyyy, mo = Textrepo::Timestamp.split_stamp(timestamp.to_s)[0..1]
+    File.join(yyyy, mo, timestamp.to_s)
   end
 end
