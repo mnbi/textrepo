@@ -56,19 +56,6 @@ class TextrepoTimestampTest < Minitest::Test
     assert_equal '20200201000001_006', stamp.to_s
   end
 
-  def test_it_can_generate_pathname
-    time = Time.new(2020, 1, 1, 0, 0, 2)
-    stamp = Textrepo::Timestamp.new(time)
-    assert_equal '2020/01/20200101000002', stamp.to_pathname
-  end
-
-  def test_it_can_generate_pathname_with_suffix
-    time = Time.new(2020, 2, 1, 0, 0, 2)
-    suffix = 345
-    stamp = Textrepo::Timestamp.new(time, suffix)
-    assert_equal '2020/02/20200201000002_345', stamp.to_pathname
-  end
-
   def test_it_is_comparable
     t0 = Textrepo::Timestamp.new(Time.new(2020, 1, 1, 0, 0, 3))
     t1 = Textrepo::Timestamp.new(Time.new(2020, 1, 1, 0, 0, 4))
@@ -104,21 +91,6 @@ class TextrepoTimestampTest < Minitest::Test
     suffix = 789
     stamp0 = Textrepo::Timestamp.new(time, suffix)
     stamp1 = Textrepo::Timestamp.parse_s(stamp0.to_s)
-    assert_equal stamp0, stamp1
-  end
-
-  def test_it_can_be_generated_from_pathname
-    time = Time.new(2020, 1, 1, 0, 0, 6)
-    stamp0 = Textrepo::Timestamp.new(time)
-    stamp1 = Textrepo::Timestamp.parse_pathname(stamp0.to_pathname)
-    assert_equal stamp0, stamp1
-  end
-
-  def test_it_can_be_generated_from_pathname_with_suffix
-    time = Time.new(2020, 1, 1, 0, 0, 6)
-    suffix = 23
-    stamp0 = Textrepo::Timestamp.new(time, suffix)
-    stamp1 = Textrepo::Timestamp.parse_pathname(stamp0.to_pathname)
     assert_equal stamp0, stamp1
   end
 end

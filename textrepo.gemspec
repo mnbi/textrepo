@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["mnbi@users.noreply.github.com"]
 
   spec.summary       = %q{A repository to store text with timestamp.}
-  spec.description   = %q{Textrepo is a repository to store text with timestamp.  It can manage text with the attached timestamp (read/update/delte).}
+  spec.description   = %q{Textrepo is a repository to store text with timestamp.  It can manage text with the attached timestamp (create/read/update/delete).}
   spec.homepage      = "https://github.com/mnbi/textrepo"
   spec.license       = "MIT"
   spec.required_ruby_version = Gem::Requirement.new(">= 2.7.0")
