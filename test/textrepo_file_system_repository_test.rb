@@ -288,7 +288,7 @@ class TextrepoFileSystemRepositoryTest < Minitest::Test
     }
   end
 
-  # for `notes(stamp_pattern)`
+  # for `entries(stamp_pattern)`
   def test_it_can_get_a_list_of_text_without_args
     repo = Textrepo::FileSystemRepository.new(@config_ro)
     entries = repo.entries
@@ -317,6 +317,19 @@ class TextrepoFileSystemRepositoryTest < Minitest::Test
 
   def test_it_can_get_a_list_with_a_modd_pattern
     assert_entries_pattern("0101", 6)
+  end
+
+  # for `exist?(timestamp)`
+  def test_it_returns_true_given_stamp_is_exists
+    repo = Textrepo::FileSystemRepository.new(@config_ro)
+    stamp = Textrepo::Timestamp.new(Time.new(2020, 1, 1, 1, 0, 0))
+    assert repo.exist?(stamp)
+  end
+
+  def test_it_returns_false_given_stamp_is_missing
+    repo = Textrepo::FileSystemRepository.new(@config_ro)
+    stamp = Textrepo::Timestamp.new(Time.new(1900, 1, 1, 1, 1, 1))
+    refute repo.exist?(stamp)
   end
 
   private
