@@ -1,23 +1,47 @@
 module Textrepo
   ##
-  # Timstamp is generated from a Time object.  It converts a time to
+  # Timestamp is generated from a Time object.  It converts a time to
   # string in the obvious format, such "20201023122400".
   #
+  # Since the obvious format contains only year, month, day, hour,
+  # minute, and second, the resolution of time is a second.  That is,
+  # two Time object those are different only in second will generates
+  # equal Timestamp objects.
+  #
+  # If a client program of Textrepo::Timestamp wants to distinguish
+  # those Time objects, an attribute `suffix` could be used.
+  #
+  # For example, the `suffix` will be converted into a 3 character
+  # string, such "012", "345", "678", ... etc.  So, millisecond part
+  # of a Time object will be suitable to pass as `suffix` when
+  # creating a Timestamp object.
+
   class Timestamp
     include Comparable
 
-    attr_reader :time, :suffix
+    ##
+    # Time object which generates the Timestamp object.
+
+    attr_reader :time
 
     ##
-    # :call-seq:
-    #   new(Time, Integer = nil)
+    # An integer specified in `new` method to create the Timestamp object.
+
+    attr_reader :suffix
+
+    ##
+    # Creates a Timestamp object from a Time object.  In addition, an
+    # Integer can be passed as a suffix use.
     #
+    # :call-seq:
+    #   new(Time, Integer = nil) -> Timestamp
+
     def initialize(time, suffix = nil)
       @time = time
       @suffix = suffix
     end
 
-    def <=>(other)
+    def <=>(other)              # :nodoc:
       result = (self.time <=> other.time)
 
       sfx = self.suffix || 0
@@ -29,12 +53,10 @@ module Textrepo
     ##
     # Generate an obvious time string.
     #
-    # ```
-    #  %Y   %m %d %H %M %S  suffix
-    # "2020-12-30 12:34:56  (0 | nil)" => "20201230123456"
-    # "2020-12-30 12:34:56  (7)"       => "20201230123456_007"
-    # ```
-    #
+    #    %Y   %m %d %H %M %S  suffix
+    #   "2020-12-30 12:34:56  (0 | nil)" -> "20201230123456"
+    #   "2020-12-30 12:34:56  (7)"       -> "20201230123456_007"
+
     def to_s
       s = @time.strftime("%Y%m%d%H%M%S")
       s += "_#{"%03u" % @suffix}" unless @suffix.nil? || @suffix == 0
@@ -43,17 +65,27 @@ module Textrepo
 
     class << self
       ##
-      # ```
-      #  yyyymoddhhmiss sfx      yyyy    mo    dd    hh    mi    ss    sfx
-      # "20201230123456"     => "2020", "12", "30", "12", "34", "56"
-      # "20201230123456_789" => "2020", "12", "30", "12", "34", "56", "789"
-      # ```
+      # Splits a string which represents a timestamp into components.
+      # Each component represents a part of constructs to instantiate
+      # a Time object.
       #
+      #    yyyymoddhhmiss sfx      yyyy    mo    dd    hh    mi    ss    sfx
+      #   "20201230123456"     -> "2020", "12", "30", "12", "34", "56"
+      #   "20201230123456_789" -> "2020", "12", "30", "12", "34", "56", "789"
+
       def split_stamp(stamp_str)
         #    yyyy  mo    dd    hh    mi      ss      sfx
         a = [0..3, 4..5, 6..7, 8..9, 10..11, 12..13, 15..17].map {|r| stamp_str[r]}
         a[-1].nil? ? a[0..-2] : a
       end
+
+      ##
+      # Generate a Timestamp object from a string which represents a
+      # timestamp, such "20201028163400".
+      #
+      # :call-seq:
+      #     parse_s("20201028163400") -> Timestamp
+      #     parse_s("20201028163529_034") -> Timestamp
 
       def parse_s(stamp_str)
         year, mon, day, hour, min, sec , sfx = split_stamp(stamp_str).map(&:to_i)

@@ -27,7 +27,7 @@ module Textrepo
     ##
     # Stores text data into the repository with the specified timestamp.
     # Returns the timestamp.
-
+    #
     # :call-seq:
     #     create(Timestamp, Array) -> Timestamp
 
@@ -36,7 +36,7 @@ module Textrepo
     ##
     # Reads text data from the repository, which is associated to the
     # timestamp.  Returns an array which contains the text.
-
+    #
     # :call-seq:
     #     read(Timestamp) -> Array
 
@@ -45,7 +45,7 @@ module Textrepo
     ##
     # Updates the content with text in the repository, which is
     # associated to the timestamp.  Returns the timestamp.
-
+    #
     # :call-seq:
     #     update(Timestamp, Array) -> Timestamp
 
@@ -54,7 +54,7 @@ module Textrepo
     ##
     # Deletes the content in the repository, which is associated to
     # the timestamp.  Returns an array which contains the deleted text.
-
+    #
     # :call-seq:
     #     delete(Timestamp) -> Array
 
@@ -63,8 +63,8 @@ module Textrepo
     ##
     # Finds all entries of text those have timestamps which mathes the
     # specified pattern of timestamp.  Returns an array which contains
-    # timestamps.  If none of text was found, an empty array would be
-    # returned.
+    # instances of Timestamp.  If none of text was found, an empty
+    # array would be returned.
     #
     #  A pattern must be one of the following:
     #
@@ -78,9 +78,9 @@ module Textrepo
     # If `stamp_pattern` is omitted, the recent entries will be listed.
     # Then, how many entries are listed depends on the implementaiton
     # of the concrete repository class.
-
+    #
     # :call-seq:
-    #     entries(String) -> Array
+    #     entries(String) -> Array of Timestamp instances
 
     def entries(stamp_pattern = nil); []; end
 
