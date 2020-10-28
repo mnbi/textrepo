@@ -294,9 +294,18 @@ class TextrepoFileSystemRepositoryTest < Minitest::Test
     entries = repo.entries
     refute_nil entries
     assert_equal 6, entries.size
-    assert entries.include?("20200101010000")
-    assert entries.include?("20200101010001")
-    assert entries.include?("20200101010002")
+    assert entries.include?(Textrepo::Timestamp.parse_s("20200101010000"))
+    assert entries.include?(Textrepo::Timestamp.parse_s("20200101010001"))
+    assert entries.include?(Textrepo::Timestamp.parse_s("20200101010002"))
+  end
+
+  # This test reproduces the issue #25.
+  def test_it_returns_array_of_timestamp_instances
+    repo = Textrepo::FileSystemRepository.new(@config_ro)
+    entries = repo.entries
+    entries.each { |e|
+      assert_instance_of Textrepo::Timestamp, e
+    }
   end
 
   def test_it_can_get_a_list_with_a_full_timestamp_str
@@ -337,7 +346,7 @@ class TextrepoFileSystemRepositoryTest < Minitest::Test
     repo = Textrepo::FileSystemRepository.new(@config_ro)
     entries = repo.entries(pattern)
     assert_equal num, entries.size
-    assert entries.reduce(false) {|r, e| r ||= e.include?(pattern)}
+    assert entries.reduce(false) {|r, e| r ||= e.to_s.include?(pattern)}
   end
 
   def timestamp_to_pathname(timestamp)
