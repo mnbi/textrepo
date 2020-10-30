@@ -79,6 +79,12 @@ class TextrepoTimestampTest < Minitest::Test
     assert t2 > t4 
   end
 
+  def test_split_stamp_fails_when_nil_was_passed
+    assert_raises(Textrepo::InvalidTimestampStringError) {
+      Textrepo::Timestamp.split_stamp(nil)
+    }
+  end
+
   def test_it_can_be_generated_from_stamp_str
     time = Time.new(2020, 1, 1, 0, 0, 5)
     stamp0 = Textrepo::Timestamp.new(time)
@@ -92,5 +98,11 @@ class TextrepoTimestampTest < Minitest::Test
     stamp0 = Textrepo::Timestamp.new(time, suffix)
     stamp1 = Textrepo::Timestamp.parse_s(stamp0.to_s)
     assert_equal stamp0, stamp1
+  end
+
+  def test_parse_s_fails_when_invalid_string_was_passed
+    assert_raises(Textrepo::InvalidTimestampStringError) {
+      Textrepo::Timestamp.parse_s("not_timestamp_string")
+    }
   end
 end

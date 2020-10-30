@@ -72,8 +72,11 @@ module Textrepo
       #    yyyymoddhhmiss sfx      yyyy    mo    dd    hh    mi    ss    sfx
       #   "20201230123456"     -> "2020", "12", "30", "12", "34", "56"
       #   "20201230123456_789" -> "2020", "12", "30", "12", "34", "56", "789"
+      #
+      # Raises InvalidTimestampStringError if nil was passed as an arguemnt.
 
       def split_stamp(stamp_str)
+        raise InvalidTimestampStringError, stamp_str if stamp_str.nil?
         #    yyyy  mo    dd    hh    mi      ss      sfx
         a = [0..3, 4..5, 6..7, 8..9, 10..11, 12..13, 15..17].map {|r| stamp_str[r]}
         a[-1].nil? ? a[0..-2] : a
@@ -83,13 +86,20 @@ module Textrepo
       # Generate a Timestamp object from a string which represents a
       # timestamp, such "20201028163400".
       #
+      # Raises InvalidTimestampStringError if cannot convert the
+      # argument into a Timestamp object.
+      #
       # :call-seq:
       #     parse_s("20201028163400") -> Timestamp
       #     parse_s("20201028163529_034") -> Timestamp
 
       def parse_s(stamp_str)
-        year, mon, day, hour, min, sec , sfx = split_stamp(stamp_str).map(&:to_i)
-        Timestamp.new(Time.new(year, mon, day, hour, min, sec), sfx)
+        begin
+          ye, mo, da, ho, mi, se, sfx = split_stamp(stamp_str).map(&:to_i)
+          Timestamp.new(Time.new(ye, mo, da, ho, mi, se), sfx)
+        rescue InvalidTimestampStringError, ArgumentError => _
+          raise InvalidTimestampStringError, stamp_str
+        end
       end
 
     end
