@@ -293,7 +293,7 @@ class TextrepoFileSystemRepositoryTest < Minitest::Test
     repo = Textrepo::FileSystemRepository.new(@config_ro)
     entries = repo.entries
     refute_nil entries
-    assert_equal 6, entries.size
+    assert_equal 8, entries.size
     assert entries.include?(Textrepo::Timestamp.parse_s("20200101010000"))
     assert entries.include?(Textrepo::Timestamp.parse_s("20200101010001"))
     assert entries.include?(Textrepo::Timestamp.parse_s("20200101010002"))
@@ -317,15 +317,15 @@ class TextrepoFileSystemRepositoryTest < Minitest::Test
   end
 
   def test_it_can_get_a_list_with_a_yyyymodd_pattern
-    assert_entries_pattern("2020-01-01".delete("-"), 6)
+    assert_entries_pattern("2020-01-01".delete("-"), 8)
   end
 
   def test_it_can_get_a_list_with_a_yyyy_pattern
-    assert_entries_pattern("2020", 6)
+    assert_entries_pattern("2020", 8)
   end
 
   def test_it_can_get_a_list_with_a_modd_pattern
-    assert_entries_pattern("0101", 6)
+    assert_entries_pattern("0101", 8)
   end
 
   # for `exist?(timestamp)`

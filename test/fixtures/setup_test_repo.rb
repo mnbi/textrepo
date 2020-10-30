@@ -35,3 +35,7 @@ files.each { |abspath|
   FileUtils.copy_file(abspath, dest) unless FileTest.exist?(dest) && FileUtils.cmp(abspath, dest)
   FileUtils.copy_file(abspath, dest_with_suffix) unless FileTest.exist?(dest_with_suffix) && FileUtils.cmp(abspath, dest_with_suffix)
 }
+
+normal_name = File.expand_path("month_name.ja.md", SAMPLE_TEXT_DIR)
+dest = File.expand_path("month_name.ja.md", repo_path)
+FileUtils.copy_file(normal_name, dest) unless FileTest.exist?(dest)

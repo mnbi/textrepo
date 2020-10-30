@@ -208,9 +208,18 @@ module Textrepo
 
     def find_entries(stamp_pattern)
       Dir.glob("#{@path}/**/#{stamp_pattern}*.#{@extname}").map { |e|
-        Timestamp.parse_s(timestamp_str(e))
-      }
+        begin
+          Timestamp.parse_s(timestamp_str(e))
+        rescue InvalidTimestampStringError => _
+          # Just ignore the erroneous entry, since it is not a text in
+          # the repository.  It may be a garbage, or some kind of
+          # hidden stuff of the repository, ... etc.
+          nil
+        end
+      }.compact
     end
+
+    # :startdoc:
 
   end
 end
