@@ -2,19 +2,21 @@ module Textrepo
 
   ##
   # Following errors might occur in repository operations:
-  #   +--------------------------+---------------------+
-  #   | operation (args)         | error type          |
-  #   +--------------------------+---------------------+
-  #   | create (timestamp, text) | Duplicate timestamp |
-  #   |                          | Empty text          |
-  #   +--------------------------+---------------------+
-  #   | read   (timestamp)       | Missing timestamp   |
-  #   +--------------------------+---------------------+
-  #   | update (timestamp, text) | Mssing timestamp    |
-  #   |                          | Empty text          |
-  #   +--------------------------+---------------------+
-  #   | delete (timestamp)       | Missing timestamp   |
-  #   +--------------------------+---------------------+
+  #   +---------------------------------+-----------------------+
+  #   | operation (args)                | error type            |
+  #   +---------------------------------+-----------------------+
+  #   | create (timestamp, text)        | Duplicate timestamp   |
+  #   |                                 | Empty text            |
+  #   +---------------------------------+-----------------------+
+  #   | read   (timestamp)              | Missing timestamp     |
+  #   +---------------------------------+-----------------------+
+  #   | update (timestamp, text)        | Mssing timestamp      |
+  #   |                                 | Empty text            |
+  #   +---------------------------------+-----------------------+
+  #   | delete (timestamp)              | Missing timestamp     |
+  #   +---------------------------------+-----------------------+
+  #   | search (pattern, stamp_pattern) | Invalid search result |
+  #   +---------------------------------+-----------------------+
 
   class Error < StandardError; end
 
@@ -25,6 +27,7 @@ module Textrepo
     EMPTY_TEXT          = 'empty text'
     MISSING_TIMESTAMP   = 'missing timestamp: %s'
     INVALID_TIMESTAMP_STRING = "invalid string as timestamp: %s"
+    INVALID_SEARCH_RESULT = "invalid result by searcher: %s"
   end
   # :startdoc:
 
@@ -74,6 +77,16 @@ module Textrepo
   class InvalidTimestampStringError < Error
     def initialize(str)
       super(ErrMsg::INVALID_TIMESTAMP_STRING % str)
+    end
+  end
+
+  ##
+  # An error raise if the search result is not suitable to use.
+  #
+
+  class InvalidSearchResultError < Error
+    def initialize(str)
+      super(ErrMsg::INVALID_SEARCH_RESULT % str)
     end
   end
 

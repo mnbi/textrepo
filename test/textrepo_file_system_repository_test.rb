@@ -341,6 +341,24 @@ class TextrepoFileSystemRepositoryTest < Minitest::Test
     refute repo.exist?(stamp)
   end
 
+  def test_it_can_search_word
+    assert_search("apple", 1)
+  end
+
+  def test_it_can_search_regex_pattern
+    assert_search("[Aa]p+le", 1)
+  end
+
+  def test_it_fails_with_inappropriate_options
+    conf = @config_ro.dup
+    conf[:searcher] = "grep"
+    conf[:searcher_options] = ["-i", "-R", "-A", "2", "-B", "2"]
+    repo = Textrepo::FileSystemRepository.new(conf)
+    assert_raises(Textrepo::InvalidSearchResultError) {
+      repo.search("apple")
+    }
+  end
+
   private
   def assert_entries_pattern(pattern, num)
     repo = Textrepo::FileSystemRepository.new(@config_ro)
@@ -352,5 +370,11 @@ class TextrepoFileSystemRepositoryTest < Minitest::Test
   def timestamp_to_pathname(timestamp)
     yyyy, mo = Textrepo::Timestamp.split_stamp(timestamp.to_s)[0..1]
     File.join(yyyy, mo, timestamp.to_s)
+  end
+
+  def assert_search(pattern, num)
+    repo = Textrepo::FileSystemRepository.new(@config_ro)
+    result = repo.search(pattern)
+    assert_operator num, :<=, result.size
   end
 end
