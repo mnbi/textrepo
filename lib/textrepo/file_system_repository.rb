@@ -1,4 +1,5 @@
 require 'fileutils'
+require "open3"
 
 module Textrepo
 
@@ -20,6 +21,16 @@ module Textrepo
     attr_reader :extname
 
     ##
+    # Searcher program name.
+
+    attr_reader :searcher
+
+    ##
+    # An array of options to pass to the searcher program.
+
+    attr_reader :searcher_options
+
+    ##
     # Default name for the repository which uses when no name is
     # specified in the configuration settings.
 
@@ -32,6 +43,11 @@ module Textrepo
     FAVORITE_EXTNAME = 'md'
 
     ##
+    # Default searcher program to search text in the repository.
+
+    FAVORITE_SEARCHER = 'grep'
+
+    ##
     # Creates a new repository object.  The argument, `conf` must be a
     # Hash object.  It should hold the follwoing values:
     #
@@ -41,15 +57,32 @@ module Textrepo
     # - OPTIONAL: (if not specified, default values are used)
     #   - :repository_name => basename of the root path for the repository
     #   - :default_extname => extname for a file stored into in the repository
+    #   - :searcher => a program to search like `grep`
+    #   - :searcher_options => an Array of option to pass to the searcher
     #
     # The root path of the repository looks like the following:
     # - conf[:repository_base]/conf[:repository_name]
     # 
-    # Default values are set when `repository_name` and `default_extname`
+    # Default values are set when `:repository_name` and `:default_extname`
     # were not defined in `conf`.
     #
+    # Be careful to set `:searcher_options`, it must be to specify the
+    # searcher behavior equivalent to `grep` with "-inR".  The default
+    # value for the searcher options is defined for BSD grep (default
+    # grep on macOS), GNU grep, and ripgrep (aka rg).  They are:
+    #
+    #   "grep"   => ["-i", "-n", "-R", "-E"]
+    #   "egrep"  => ["-i", "-n", "-R"]
+    #   "ggrep"  => ["-i", "-n", "-R", "-E"]
+    #   "gegrep" => ["-i", "-n", "-R"]
+    #   "rg"     => ["-S", "-n", "--no-heading", "--color", "never"]
+    #
+    # If use those 3 searchers, it is not recommended to set
+    # `:searcher_options`.  The default value works well in
+    # `textrepo`.
+    #
     # :call-seq:
-    #     new(Rbnotes::Conf or Hash) -> FileSystemRepository
+    #     new(Hash or Hash like object) -> FileSystemRepository
 
     def initialize(conf)
       super
@@ -58,6 +91,8 @@ module Textrepo
       @path = File.expand_path("#{name}", base)
       FileUtils.mkdir_p(@path)
       @extname = conf[:default_extname] || FAVORITE_EXTNAME
+      @searcher = find_searcher(conf[:searcher])
+      @searcher_options = conf[:searcher_options]
     end
 
     ##
@@ -179,6 +214,27 @@ module Textrepo
       FileTest.exist?(abspath(timestamp))
     end
 
+    ##
+    # Searches a pattern in all text.  The given pattern is a word to
+    # search or a regular expression.  The pattern would be passed to
+    # a searcher program as it passed.
+    #
+    # See the document for Textrepo::Repository#search to know about
+    # the search result.
+    #
+    # :call-seq:
+    #     search(String for pattern, String for Timestamp pattern) -> Array
+
+    def search(pattern, stamp_pattern = nil)
+      result = nil
+      if stamp_pattern.nil?
+        result = invoke_searcher_at_repo_root(@searcher, pattern)
+      else
+        result = invoke_searcher_for_entries(@searcher, pattern, entries(stamp_pattern))
+      end
+      construct_search_result(result)
+    end
+
     # :stopdoc:
 
     private
@@ -219,6 +275,142 @@ module Textrepo
       }.compact
     end
 
+    ##
+    # The upper limit of files to search at one time.  The value has
+    # no reason to select.  It seems to me that not too much, not too
+    # little to handle in one process to search.
+
+    LIMIT_OF_FILES = 20
+
+    ##
+    # When no timestamp pattern was given, invoke the searcher with
+    # the repository root path as its argument and the recursive
+    # searching option.  The search could be done in only one process.
+
+    def invoke_searcher_at_repo_root(searcher, pattern)
+      o, s = Open3.capture2(searcher, *find_searcher_options(searcher),
+                            pattern, @path)
+      output = []
+      output += o.lines.map(&:chomp) if s.success? && (! o.empty?)
+      output
+    end
+
+    ##
+    # When a timestamp pattern was given, at first, list target files,
+    # then invoke the searcher for those files.  Since the number of
+    # target files may be so much, it seems to be dangerous to pass
+    # all of them to a single search process at one time.
+    #
+    # One more thing to mention, the searcher, like `grep`, does not
+    # add the filename at the beginning of the search result line, if
+    # the target is one file.  This behavior is not suitable in this
+    # purpose.  The code below adds the filename when the target is
+    # one file.
+
+    def invoke_searcher_for_entries(searcher, pattern, entries)
+      output = []
+
+      num_of_entries = entries.size
+      if num_of_entries == 1
+        # If the search taget is one file, the output needs special
+        # treatment.
+        file = abspath(entries[0])
+        o, s = Open3.capture2(searcher, *find_searcher_options(searcher),
+                              pattern, file)
+        if s.success? && (! o.empty)
+          output += o.lines.map { |line|
+            # add filename at the beginning of the search result line
+            [file, line.chomp].join(":")
+          }
+        end
+      elsif num_of_entries > LIMIT_OF_FILES
+        output += invoke_searcher_for_entries(searcher, pattern, entries[0..(LIMIT_OF_FILES - 1)])
+        output += invoke_searcher_for_entries(searcher, pattern, entries[LIMIT_OF_FILES..-1])
+      else
+        # When the number of target is less than the upper limit,
+        # invoke the searcher with all of target files as its
+        # arguments.
+        files = find_files(entries)
+        o, s = Open3.capture2(searcher, *find_searcher_options(searcher),
+                              pattern, *files)
+        if s.success? && (! o.empty)
+          output += o.lines.map(&:chomp)
+        end
+      end
+
+      output
+    end
+
+    SEARCHER_OPTS = {
+      # case insensitive, print line number, recursive search, work as egrep
+      "grep"   => ["-i", "-n", "-R", "-E"],
+      # case insensitive, print line number, recursive search
+      "egrep"  => ["-i", "-n", "-R"],
+      # case insensitive, print line number, recursive search, work as gegrep
+      "ggrep"  => ["-i", "-n", "-R", "-E"],
+      # case insensitive, print line number, recursive search
+      "gegrep" => ["-i", "-n", "-R"],
+      # smart case, print line number, no color
+      "rg"     => ["-S", "-n", "--no-heading", "--color", "never"],
+    }
+
+    def find_searcher_options(searcher)
+      @searcher_options || SEARCHER_OPTS[File.basename(searcher)] || ""
+    end
+
+    def find_files(timestamps)
+      timestamps.map{|stamp| abspath(stamp)}
+    end
+
+    ##
+    # The argument must be an Array contains the searcher output.
+    # Each item is constructed from 3 parts:
+    #   "<pathname>:<integer>:<text>"
+    #
+    # For example, it may looks like:
+    #
+    #   "/somewhere/2020/11/20201101044300.md:18:foo is foo"
+    #
+    # Or it may contains more ":" in the text part as:
+    #
+    #   "/somewhere/2020/11/20201101044500.md:119:apple:orange:grape"
+    #
+    # In the latter case, `split(":")` will split it too much.  That is,
+    # the result will be:
+    #
+    #  ["/somewhere/2020/11/20201101044500.md", "119", "apple", "orange", "grape"]
+    #
+    # Text part must be joined with ":".
+
+    def construct_search_result(output)
+      output.map { |line|
+        begin
+          pathname, num, *match_text = line.split(":")
+          [Timestamp.parse_s(timestamp_str(pathname)),
+           num.to_i,
+           match_text.join(":")]
+        rescue InvalidTimestampStringError, TypeError => _
+          raise InvalidSearchResultError, [@searcher, @searcher_options.join(" ")].join(" ")
+        end
+      }.compact
+    end
+
+    def find_searcher(program = nil)
+      candidates = [FAVORITE_SEARCHER]
+      candidates.unshift(program) unless program.nil? || candidates.include?(program)
+      search_paths = ENV["PATH"].split(":")
+      candidates.map { |prog|
+        find_in_paths(prog, search_paths)
+      }[0]
+    end
+
+    def find_in_paths(prog, paths)
+      paths.each { |p|
+        abspath = File.expand_path(prog, p)
+        return abspath if FileTest.exist?(abspath) && FileTest.executable?(abspath)
+      }
+      nil
+    end
     # :startdoc:
 
   end

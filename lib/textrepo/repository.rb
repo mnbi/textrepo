@@ -92,6 +92,25 @@ module Textrepo
     #     exist?(Timestamp) -> true or false
 
     def exist?(timestamp); false; end
+
+    ##
+    # Searches a pattern (word or regular expression) in text those
+    # matches to a given timestamp pattern.  Returns an Array of
+    # search results.  If no match, returns an empty Array.
+    #
+    # See the document for Repository#entries about a timestamp
+    # pattern.  When nil is passed as a timestamp pattern, searching
+    # applies to all text in the repository.
+    #
+    # Each entry of the result Array is constructed from 3 items, (1)
+    # timestamp (Timestamp), (2) line number (Integer), (3) matched
+    # line (String).
+    #
+    # :call-seq:
+    #     search(String for pattern, String for Timestamp pattern) -> Array
+
+    def search(pattern, stamp_pattern = nil); []; end
+
   end
 
   require_relative 'file_system_repository'

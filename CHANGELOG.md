@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 Nothing to record here.
 
+## [0.5.0] - 2020-11-01
+### Added
+- Add a new API `Repository#search`.
+- Add a new API `Repository#exist?`. (0.4.3)
+
 ## [0.4.0] - 2020-10-14
 ### Added
 - Released to rubygems.org.
