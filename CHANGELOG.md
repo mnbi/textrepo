@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 Nothing to record here.
 
+## [0.5.1] - 2020-11-02
+### Changed
+- Fix issue #28.
+  - Modify `Repository#update` to do nothing when the given text is
+    identical to the one in the repository.
+
 ## [0.5.0] - 2020-11-01
 ### Added
 - Add a new API `Repository#search`.
