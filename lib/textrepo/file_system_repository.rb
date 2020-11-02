@@ -132,21 +132,25 @@ module Textrepo
     # Updates the file content in the repository.  A new timestamp
     # will be attached to the text.
     #
+    # See the documentation of Repository#update to know about errors
+    # and constraints of this method.
+    #
     # :call-seq:
     #     update(Timestamp, Array) -> Timestamp
 
     def update(timestamp, text)
       raise EmptyTextError if text.empty?
-      org_abs = abspath(timestamp)
-      raise MissingTimestampError, timestamp unless FileTest.exist?(org_abs)
+      raise MissingTimestampError, timestamp unless exist?(timestamp)
+
+      # does nothing if given text is the same in the repository one
+      return timestamp if read(timestamp) == text
 
       # the text must be stored with the new timestamp
       new_stamp = Timestamp.new(Time.now)
-      new_abs = abspath(new_stamp)
-      write_text(new_abs, text)
+      write_text(abspath(new_stamp), text)
 
-      # delete the original file in the repository
-      FileUtils.remove_file(org_abs)
+      # delete the original text file in the repository
+      FileUtils.remove_file(abspath(timestamp))
 
       new_stamp
     end

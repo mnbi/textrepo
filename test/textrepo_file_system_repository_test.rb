@@ -237,6 +237,18 @@ class TextrepoFileSystemRepositoryTest < Minitest::Test
     }
   end
 
+  # issue #28
+  def test_it_does_not_update_with_the_same_text
+    repo_rw = Textrepo::FileSystemRepository.new(@config_rw)
+
+    org_stamp = Textrepo::Timestamp.new(Time.new(2020, 1, 1, 1, 0, 0))
+
+    text = repo_rw.read(org_stamp)
+    new_stamp = repo_rw.update(org_stamp, text)
+
+    assert_equal org_stamp, new_stamp
+  end
+
   # for `delete(timestamp)`
   def test_it_can_delete_text_in_the_repository
     repo_rw = Textrepo::FileSystemRepository.new(@config_rw)
