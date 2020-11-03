@@ -67,9 +67,10 @@ module Textrepo
     # were not defined in `conf`.
     #
     # Be careful to set `:searcher_options`, it must be to specify the
-    # searcher behavior equivalent to `grep` with "-inR".  The default
-    # value for the searcher options is defined for BSD grep (default
-    # grep on macOS), GNU grep, and ripgrep (aka rg).  They are:
+    # searcher behavior equivalent to `grep` with "-inRE".  The
+    # default values for the searcher options is defined for BSD grep
+    # (default grep on macOS), GNU grep, and ripgrep (aka rg).  They
+    # are:
     #
     #   "grep"   => ["-i", "-n", "-R", "-E"]
     #   "egrep"  => ["-i", "-n", "-R"]
@@ -77,7 +78,7 @@ module Textrepo
     #   "gegrep" => ["-i", "-n", "-R"]
     #   "rg"     => ["-S", "-n", "--no-heading", "--color", "never"]
     #
-    # If use those 3 searchers, it is not recommended to set
+    # If use those searchers, it is not recommended to set
     # `:searcher_options`.  The default value works well in
     # `textrepo`.
     #
@@ -186,7 +187,7 @@ module Textrepo
         if exist?(stamp)
           results << stamp
         end
-      when 0, "yyyymoddhhmiss".size, "yyyymodd".size
+      when 0, "yyyymoddhhmiss".size, "yyyymodd".size, "yyyymo".size
         results += find_entries(stamp_pattern)
       when 4                    # "yyyy" or "modd"
         pat = nil
