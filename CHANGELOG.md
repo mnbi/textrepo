@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 Nothing to record here.
 
+## [0.5.3] - 2020-11-03
+### Changed
+- Fix issue #38: fix typo in code for FileSystemRepository.
+
 ## [0.5.2] - 2020-11-03
 ### Changed
 - Fix issue #34:

@@ -7,7 +7,7 @@ FileUtils.mkdir_p(repo_path)
 files = Dir.entries(SAMPLE_TEXT_DIR).filter_map { |e|
   e = File.expand_path(e, SAMPLE_TEXT_DIR)
   e if FileTest.file?(e)
-}
+}.sort
 
 year, month, day, hour, min, sec, suffix = [2020, 1, 1, 1, 0, 0, 123]
 

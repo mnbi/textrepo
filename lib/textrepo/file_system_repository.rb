@@ -322,7 +322,7 @@ module Textrepo
         file = abspath(entries[0])
         o, s = Open3.capture2(searcher, *find_searcher_options(searcher),
                               pattern, file)
-        if s.success? && (! o.empty)
+        if s.success? && (! o.empty?)
           output += o.lines.map { |line|
             # add filename at the beginning of the search result line
             [file, line.chomp].join(":")
@@ -338,7 +338,7 @@ module Textrepo
         files = find_files(entries)
         o, s = Open3.capture2(searcher, *find_searcher_options(searcher),
                               pattern, *files)
-        if s.success? && (! o.empty)
+        if s.success? && (! o.empty?)
           output += o.lines.map(&:chomp)
         end
       end
