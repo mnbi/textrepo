@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 Nothing to record here.
 
+## [0.5.2] - 2020-11-03
+### Changed
+- Fix issue #34:
+  - fix FileSystemRepository#entries to accept "yyyymo" pattern as a
+    Timestamp pattern.
+- Fix issue #33: fix typo in the doc for FileSystemRepository.new.
+- Fix issue #31: unfriendly error message of Timestamp.parse_s.
+
 ## [0.5.1] - 2020-11-02
 ### Changed
 - Fix issue #28.

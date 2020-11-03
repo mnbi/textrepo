@@ -97,8 +97,15 @@ module Textrepo
         begin
           ye, mo, da, ho, mi, se, sfx = split_stamp(stamp_str).map(&:to_i)
           Timestamp.new(Time.new(ye, mo, da, ho, mi, se), sfx)
-        rescue InvalidTimestampStringError, ArgumentError => _
-          raise InvalidTimestampStringError, stamp_str
+        rescue InvalidTimestampStringError, ArgumentError => e
+          emsg = if stamp_str.nil?
+            "(nil)"
+          elsif stamp_str.empty?
+            "(empty string)"
+          else
+            stamp_str
+          end
+          raise InvalidTimestampStringError, emsg
         end
       end
 

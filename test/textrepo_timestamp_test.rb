@@ -105,4 +105,19 @@ class TextrepoTimestampTest < Minitest::Test
       Textrepo::Timestamp.parse_s("not_timestamp_string")
     }
   end
+
+  # [issue #31]
+  def test_parse_s_fais_and_returns_friendly_error_message
+    begin
+      Textrepo::Timestamp.parse_s("") # empty string
+    rescue Textrepo::InvalidTimestampStringError => e
+      assert_includes e.message, "empty"
+    end
+
+    begin
+      Textrepo::Timestamp.parse_s(nil)
+    rescue Textrepo::InvalidTimestampStringError => e
+      assert_includes e.message, "nil"
+    end
+  end
 end

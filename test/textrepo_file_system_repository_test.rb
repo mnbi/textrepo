@@ -311,7 +311,7 @@ class TextrepoFileSystemRepositoryTest < Minitest::Test
     assert entries.include?(Textrepo::Timestamp.parse_s("20200101010002"))
   end
 
-  # This test reproduces the issue #25.
+  # [issue #25]
   def test_it_returns_array_of_timestamp_instances
     repo = Textrepo::FileSystemRepository.new(@config_ro)
     entries = repo.entries
@@ -338,6 +338,11 @@ class TextrepoFileSystemRepositoryTest < Minitest::Test
 
   def test_it_can_get_a_list_with_a_modd_pattern
     assert_entries_pattern("0101", 8)
+  end
+
+  # [issue #34]
+  def test_it_can_get_a_list_with_a_yyyymo_pattern
+    assert_entries_pattern("202001", 8)
   end
 
   # for `exist?(timestamp)`
