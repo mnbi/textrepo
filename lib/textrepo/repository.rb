@@ -44,11 +44,16 @@ module Textrepo
 
     ##
     # Updates the content with given text in the repository, which is
-    # associated to the given timestamp.  Returns the timestamp newly
-    # generated during the execution.
+    # associated to the given Timestamp object.  Returns the Timestamp
+    # newly generated during the execution.
     #
-    # If the given Timestamp is not existed as a Timestamp attached to
-    # text in the repository, raises MissingTimestampError.
+    # When true is passed as the third argument, keeps the Timestamp
+    # unchanged, though updates the content.  Then, returns the given
+    # Timestamp object.
+    #
+    # If the given Timestamp object is not existed as a Timestamp
+    # attached to text in the repository, raises
+    # MissingTimestampError.
     #
     # If the given text is empty, raises EmptyTextError.
     #
@@ -56,9 +61,9 @@ module Textrepo
     # does nothing.  Returns the given timestamp itself.
     #
     # :call-seq:
-    #     update(Timestamp, Array) -> Timestamp
+    #     update(Timestamp, Array, true or false) -> Timestamp
 
-    def update(timestamp, text); timestamp; end
+    def update(timestamp, text, keep_stamp = false); timestamp; end
 
     ##
     # Deletes the content in the repository, which is associated to

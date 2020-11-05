@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 Nothing to record here.
 
+## [0.5.4] - 2020-11-05
+### Add
+- Add a feature for `Repository#update` to keep timestamp unchanged
+  - add the third argument as:
+    - `Repository#update(timestamp, text, keep_stamp = false)`
+
 ## [0.5.3] - 2020-11-03
 ### Changed
 - Fix issue #38: fix typo in code for FileSystemRepository.
