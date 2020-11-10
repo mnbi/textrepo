@@ -317,20 +317,7 @@ module Textrepo
     def invoke_searcher_for_entries(searcher, pattern, entries)
       output = []
 
-      num_of_entries = entries.size
-      if num_of_entries == 1
-        # If the search taget is one file, the output needs special
-        # treatment.
-        file = abspath(entries[0])
-        o, s = Open3.capture2(searcher, *find_searcher_options(searcher),
-                              pattern, file)
-        if s.success? && (! o.empty?)
-          output += o.lines.map { |line|
-            # add filename at the beginning of the search result line
-            [file, line.chomp].join(":")
-          }
-        end
-      elsif num_of_entries > LIMIT_OF_FILES
+      if entries.size > LIMIT_OF_FILES
         output += invoke_searcher_for_entries(searcher, pattern, entries[0..(LIMIT_OF_FILES - 1)])
         output += invoke_searcher_for_entries(searcher, pattern, entries[LIMIT_OF_FILES..-1])
       else
@@ -349,14 +336,16 @@ module Textrepo
     end
 
     SEARCHER_OPTS = {
-      # case insensitive, print line number, recursive search, work as egrep
-      "grep"   => ["-i", "-n", "-R", "-E"],
-      # case insensitive, print line number, recursive search
-      "egrep"  => ["-i", "-n", "-R"],
-      # case insensitive, print line number, recursive search, work as gegrep
-      "ggrep"  => ["-i", "-n", "-R", "-E"],
-      # case insensitive, print line number, recursive search
-      "gegrep" => ["-i", "-n", "-R"],
+      # grep option meaning:
+      # - "-i": case insensitive,
+      # - "-n": print line number,
+      # - "-H": print file name,
+      # - "-R": recursive search,
+      # - "-E": work as egrep
+      "grep"   => ["-i", "-n", "-H", "-R", "-E"],
+      "egrep"  => ["-i", "-n", "-H", "-R"],
+      "ggrep"  => ["-i", "-n", "-H", "-R", "-E"],
+      "gegrep" => ["-i", "-n", "-H", "-R"],
       # smart case, print line number, no color
       "rg"     => ["-S", "-n", "--no-heading", "--color", "never"],
     }

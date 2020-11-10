@@ -1,6 +1,8 @@
 module Textrepo
   class Repository
 
+    include Enumerable
+
     ##
     # Repository type.  It specifies which concrete repository class
     # will instantiated.  For example, the type `:file_system` specifies
@@ -125,6 +127,65 @@ module Textrepo
 
     def search(pattern, stamp_pattern = nil); []; end
 
+    ##
+    # Calls the given block once for each pair of timestamp and text
+    # in self, passing those pair as parameter.  Returns the
+    # repository itself.
+    #
+    # If no block is given, an Enumerator is returned.
+
+    def each(&block)
+      if block.nil?
+        entries.lazy.map { |timestamp| pair(timestamp) }.to_enum(:each)
+      else
+        entries.each { |timestamp| yield pair(timestamp) }
+        self
+      end
+    end
+
+    alias each_pair each
+
+    ##
+    # Calls the given block once for each timestamp in self, passing
+    # the timestamp as a parameter.  Returns the repository itself.
+    #
+    # If no block is given, an Enumerator is returned.
+
+    def each_key(&block)
+      if block.nil?
+        entries.to_enum(:each)
+      else
+        entries.each(&block)
+      end
+    end
+
+    alias each_timestamp each_key
+
+    ##
+    # Calls the given block once for each timestamp in self, passing
+    # the text as a parameter.  Returns the repository itself.
+    #
+    # If no block is given, an Enumerator is returned.
+
+    def each_value(&block)
+      if block.nil?
+        entries.lazy.map { |timestamp| read(timestamp) }.to_enum(:each)
+      else
+        entries.each { |timestamp| yield read(timestamp) }
+      end
+    end
+
+    alias each_text each_value
+
+    # :stopdoc:
+
+    private
+
+    def pair(timestamp)
+      [timestamp, read(timestamp)]
+    end
+
+    # :startdoc:
   end
 
   require_relative 'file_system_repository'

@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 Nothing to record here.
 
+## [0.5.6] - 2020-11-11
+### Add
+- Change `Repository` to enumerable.
+  - add `#each` method to `Repository`, then include `Enumerable`.
+- Add "-H" option to some searcher default options.
+
 ## [0.5.5] - 2020-11-10
 ### Add
 - Add more methods for `Timestamp` class.
