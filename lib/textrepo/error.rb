@@ -22,14 +22,25 @@ module Textrepo
 
   # :stopdoc:
   module ErrMsg
-    UNKNOWN_REPO_TYPE   = 'unknown type for repository: %s'
-    DUPLICATE_TIMESTAMP = 'duplicate timestamp: %s'
-    EMPTY_TEXT          = 'empty text'
-    MISSING_TIMESTAMP   = 'missing timestamp: %s'
+    ARGUMENT_RANGE      = "argument out of range: %s"
+    UNKNOWN_REPO_TYPE   = "unknown type for repository: %s"
+    DUPLICATE_TIMESTAMP = "duplicate timestamp: %s"
+    EMPTY_TEXT          = "empty text"
+    MISSING_TIMESTAMP   = "missing timestamp: %s"
     INVALID_TIMESTAMP_STRING = "invalid string as timestamp: %s"
     INVALID_SEARCH_RESULT = "invalid result by searcher: %s"
   end
   # :startdoc:
+
+  ##
+  # An error raised if argument is out of range for Timestamp class.
+
+  class ArgumentRangeError < Error
+    def initialize(arg)
+      super(ErrMsg::ARGUMENT_RANGE % arg)
+    end
+  end
+
 
   ##
   # An error raised if unknown type was specified as the repository

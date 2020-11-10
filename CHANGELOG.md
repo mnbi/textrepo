@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 Nothing to record here.
 
+## [0.5.5] - 2020-11-10
+### Add
+- Add more methods for `Timestamp` class.
+  - most of them are delegated to Time class
+  - some of them are useful to manipulate `Timestamp` object as
+    `String`.
+
 ## [0.5.4] - 2020-11-05
 ### Add
 - Add a feature for `Repository#update` to keep timestamp unchanged
