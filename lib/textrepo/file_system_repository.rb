@@ -190,7 +190,7 @@ module Textrepo
           results << stamp
         end
       when 0, "yyyymoddhhmiss".size, "yyyymodd".size, "yyyymo".size
-        results += find_entries(stamp_pattern)
+        results += find_entries("#{stamp_pattern}*")
       when 4                    # "yyyy" or "modd"
         pat = nil
         # The following distinction is practically correct, but not
@@ -199,10 +199,10 @@ module Textrepo
         # any text (I believe...).
         if stamp_pattern.to_i > 1231
           # yyyy
-          pat = stamp_pattern
+          pat = "#{stamp_pattern}*"
         else
           # modd
-          pat = "*#{stamp_pattern}"
+          pat = "????#{stamp_pattern}*"
         end
         results += find_entries(pat)
       end
@@ -270,7 +270,7 @@ module Textrepo
     end
 
     def find_entries(stamp_pattern)
-      Dir.glob("#{@path}/**/#{stamp_pattern}*.#{@extname}").map { |e|
+      Dir.glob("#{@path}/**/#{stamp_pattern}.#{@extname}").map { |e|
         begin
           Timestamp.parse_s(timestamp_str(e))
         rescue InvalidTimestampStringError => _
