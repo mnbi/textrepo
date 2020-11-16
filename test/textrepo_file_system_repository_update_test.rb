@@ -7,14 +7,14 @@ class TextrepoFileSystemRepositoryUpdateTest < Minitest::Test
 
     time_of_src = Time.new(2020, 1, 1, 1, 0, 0)
     stmp_src = Textrepo::Timestamp.new(time_of_src)
-    repo_src = File.expand_path(CONF_RO[:repository_name], CONF_RO[:repository_base])
+    repo_src = repo_path(CONF_RO)
     src = File.expand_path(timestamp_to_pathname(stmp_src) + '.md', repo_src)
 
     0.upto(1) { |i|
       time = Time.at(time_of_src.to_i + i)
       stmp = Textrepo::Timestamp.new(time)
       stmp_sfx = Textrepo::Timestamp.new(time, 88)
-      repo = File.expand_path(@conf_rw[:repository_name], @conf_rw[:repository_base])
+      repo = repo_path(@conf_rw)
       dst = File.expand_path(timestamp_to_pathname(stmp) + '.md', repo)
       dst_sfx = File.expand_path(timestamp_to_pathname(stmp_sfx) + '.md', repo)
 

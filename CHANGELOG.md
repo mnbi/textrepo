@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 Nothing to record here.
 
+## [0.5.7] - 2020-11-16
+### Fixed
+- Fix issue #47: mmdd pattern matches incorrectly (`#entries`).
+
 ## [0.5.6] - 2020-11-11
 ### Add
 - Change `Repository` to enumerable.
@@ -27,11 +31,11 @@ Nothing to record here.
     - `Repository#update(timestamp, text, keep_stamp = false)`
 
 ## [0.5.3] - 2020-11-03
-### Changed
+### Fixed
 - Fix issue #38: fix typo in code for FileSystemRepository.
 
 ## [0.5.2] - 2020-11-03
-### Changed
+### Fixed
 - Fix issue #34:
   - fix FileSystemRepository#entries to accept "yyyymo" pattern as a
     Timestamp pattern.
@@ -39,7 +43,7 @@ Nothing to record here.
 - Fix issue #31: unfriendly error message of Timestamp.parse_s.
 
 ## [0.5.1] - 2020-11-02
-### Changed
+### Fixed
 - Fix issue #28.
   - Modify `Repository#update` to do nothing when the given text is
     identical to the one in the repository.

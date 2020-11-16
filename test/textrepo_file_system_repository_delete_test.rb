@@ -4,24 +4,7 @@ require 'test_helper'
 class TextrepoFileSystemRepositoryDeleteTest < Minitest::Test
   def setup
     @conf_rw = CONF_RW
-
-    # prepare a file into the sandobx repository
-    stamp = Textrepo::Timestamp.new(Time.new(2020, 1, 1, 1, 0, 0))
-    stmp_sfx = Textrepo::Timestamp.new(Time.new(2020, 1, 1, 1, 0, 0), 88)
-
-    repo_rw_path = File.expand_path(@conf_rw[:repository_name],
-                                    @conf_rw[:repository_base])
-    dst = File.expand_path(timestamp_to_pathname(stamp) + '.md', repo_rw_path)
-    dst_sfx = File.expand_path(timestamp_to_pathname(stmp_sfx) + '.md',
-                               repo_rw_path)
-
-    repo_ro_path = File.expand_path(CONF_RO[:repository_name],
-                                    CONF_RO[:repository_base])
-    src = File.expand_path(timestamp_to_pathname(stamp) + '.md', repo_ro_path)
-
-    FileUtils.mkdir_p(File.dirname(dst))
-    FileUtils.copy_file(src, dst)
-    FileUtils.copy_file(src, dst_sfx)
+    setup_read_write_repo(@conf_rw)
   end
 
   def test_it_can_delete_text_in_the_repository
