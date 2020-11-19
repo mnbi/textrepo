@@ -61,6 +61,32 @@ stamps.each { |stamp|
 Also see `examples` directory.  There is a small tool to demonstrate
 how to use `textrepo`.
 
+## What is TEXT?
+
+In macOS (or similar unix OS), text is a date stored into a regular
+file.  Its characteristics are;
+
+- a character stream coded in some encoding system (such UTF-8),
+- divided into multiple physical lines with newline character (`\n`).
+
+In `textrepo` and its client program, a **text** is usually generated
+from a text file mentioned above.  It is;
+
+- a character stream coded in UTF-8,
+- consists of multiple logical lines (each of them does not contain a
+  newline character).
+
+That is, newline characters are removed when text is read from a file
+and added appropriately when it is written into a file.
+
+So, **text** is represented with Ruby objects as follows:
+
+- **Text** is represented with an `Array` object which contains
+  multiple `String` objects.
+- A `String` object represents a **logical line** of **text**.
+- Each `String` does not contain a newline character.
+- An empty string ("") represents a empty line.
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
