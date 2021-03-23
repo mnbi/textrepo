@@ -329,11 +329,11 @@ module Textrepo
       # Raises InvalidTimestampStringError if nil was passed as an arguemnt.
 
       def split_stamp(stamp_str)
-        raise InvalidTimestampStringError, stamp_str if stamp_str.nil?
+        raise InvalidTimestampStringError, "(nil)" if stamp_str.nil?
         #    yyyy  mo    dd    hh    mi      ss      sfx
         a = [0..3, 4..5, 6..7, 8..9, 10..11, 12..13, 15..17].map {|r| stamp_str[r]}
         a.delete_at(-1) if a[-1].nil?
-        a
+        a.map{|e| e || "" }
       end
 
       ##
@@ -348,18 +348,15 @@ module Textrepo
       #     parse_s("20201028163529_034") -> Timestamp
 
       def parse_s(stamp_str)
+        raise InvalidTimestampStringError, "(nil)" if stamp_str.nil?
+        raise InvalidTimestampStringError, "(empty string)" if stamp_str.empty?
+        raise InvalidTimestampStringError, stamp_str if stamp_str.size < 14
+
         begin
           ye, mo, da, ho, mi, se, sfx = split_stamp(stamp_str).map(&:to_i)
           Timestamp.new(Time.new(ye, mo, da, ho, mi, se), sfx)
-        rescue InvalidTimestampStringError, ArgumentError => _
-          emsg = if stamp_str.nil?
-            "(nil)"
-          elsif stamp_str.empty?
-            "(empty string)"
-          else
-            stamp_str
-          end
-          raise InvalidTimestampStringError, emsg
+        rescue ArgumentRangeError, ArgumentError => _
+          raise InvalidTimestampStringError, stamp_str
         end
       end
     end

@@ -387,4 +387,27 @@ class TextrepoTimestampTest < Minitest::Test
     assert_equal parts, result
   end
 
+  # issue #49
+  def test_parse_s_raises_when_the_arg_is_too_short
+    ts_year_only = "2021"
+    ts_year_month = "202103"
+    ts_year_date = "20210323"
+    ts_year_date_hour = "2021032315"
+    ts_year_date_hour_min = "202103231536"
+
+    [ts_year_only, ts_year_month, ts_year_date, ts_year_date_hour, ts_year_date_hour_min].each { |ts|
+      assert_raises(Textrepo::InvalidTimestampStringError) {
+        Textrepo::Timestamp.parse_s(ts)
+      }
+    }
+  end
+
+  def test_parse_s_raises_when_the_arg_contains_invalid_suffix
+    assert_raises(Textrepo::InvalidTimestampStringError) {
+      Textrepo::Timestamp.parse_s("20200323161200_-01")
+    }
+  end
+
+  # issue #49 end
+
 end
