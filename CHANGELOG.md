@@ -5,7 +5,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
-- add a section to describe about **text** into `README.md`.
+
+## [0.5.8] - 2021-03-23
+### Add
+- Add a section to describe about **text** into `README.md`.
+
+### Fixed
+- Fix issue #49: Timestamp.parse_s will cause a crash.
 
 ## [0.5.7] - 2020-11-16
 ### Fixed
