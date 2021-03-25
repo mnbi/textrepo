@@ -1,6 +1,6 @@
 # Textrepo
 
-[![Build Status](https://travis-ci.org/mnbi/textrepo.svg?branch=main)](https://travis-ci.org/mnbi/textrepo)
+[![Build Status](https://github.com/mnbi/textrepo/workflows/Build/badge.svg)](https://github.com/mnbi/textrepo/actions?query=workflow%3A"Build")
 
 Textrepo is a repository to store a note with a timestamp.  Each note
 in the repository operates with the associated timestamp.
