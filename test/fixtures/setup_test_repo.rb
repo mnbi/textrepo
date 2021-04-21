@@ -28,7 +28,7 @@ files.each { |abspath|
   dirname = File.expand_path(t.strftime("%Y/%m"), repo_path)
   basename = t.strftime("%Y%m%d%H%M%S")
   dest = "#{dirname}/#{basename}#{File.extname(abspath)}"
-  dest_with_suffix = 
+  dest_with_suffix =
     "#{dirname}/#{basename}_#{"%03u" % suffix}#{File.extname(abspath)}"
 
   FileUtils.mkdir_p(dirname)

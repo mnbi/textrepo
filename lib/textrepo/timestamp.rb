@@ -155,7 +155,7 @@ module Textrepo
     # :stopdoc:
 
     # delegators to String object
-    
+
     def_instance_delegators :@str, :size, :length
     def_instance_delegators :@str, :include?, :match, :match?
 

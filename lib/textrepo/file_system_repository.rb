@@ -62,7 +62,7 @@ module Textrepo
     #
     # The root path of the repository looks like the following:
     # - conf[:repository_base]/conf[:repository_name]
-    # 
+    #
     # Default values are set when `:repository_name` and `:default_extname`
     # were not defined in `conf`.
     #

@@ -36,7 +36,7 @@ module Rbnotes
       prefix = '# '
       subject = prefix + subject.lstrip if subject[0, 2] != prefix
 
-      ts_part = "#{timestamp_str}    "[0..(TIMESTAMP_STR_MAX_WIDTH - 1)] 
+      ts_part = "#{timestamp_str}    "[0..(TIMESTAMP_STR_MAX_WIDTH - 1)]
       sj_part = truncate_str(subject, subject_width)
 
       ts_part + delimiter + sj_part

@@ -91,7 +91,7 @@ class TextrepoTimestampTest < Minitest::Test
     assert t1 == t2
     assert t0 > t3
     assert t0 < t4
-    assert t2 > t4 
+    assert t2 > t4
   end
 
   def test_split_stamp_fails_when_nil_was_passed
