@@ -89,7 +89,7 @@ module Textrepo
       super
       base = conf[:repository_base]
       @name ||= FAVORITE_REPOSITORY_NAME
-      @path = File.expand_path("#{name}", base)
+      @path = File.expand_path(name, base)
       FileUtils.mkdir_p(@path)
       @extname = conf[:default_extname] || FAVORITE_EXTNAME
       @searcher = find_searcher(conf[:searcher])

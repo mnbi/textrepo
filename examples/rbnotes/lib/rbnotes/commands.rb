@@ -43,14 +43,8 @@ USAGE
         def execute(_, conf)
           name = conf[:repository_name]
           base = conf[:repository_base]
-          type = conf[:repository_type]
 
-          puts case type
-               when :file_system
-                 "#{base}/#{name}"
-               else
-                 "#{base}/#{name}"
-               end
+          puts "#{base}/#{name}"
         end
       end
 
