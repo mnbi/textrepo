@@ -5,7 +5,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
+
+## [0.5.9] - 2021-05-25
+### Fixed
+- Fix issue #54: add check argument in some methods.
 - Fix issue #52: remove trailing spaces.
+
+### Changed
+- Update copyright year in `LICENSE`. (#53)
 - Use GitHub/Actions instead of Travis-CI.
 
 ## [0.5.8] - 2021-03-23

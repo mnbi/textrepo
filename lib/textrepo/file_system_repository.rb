@@ -181,9 +181,12 @@ module Textrepo
     #     entries(String = nil) -> Array of Timestamp instances
 
     def entries(stamp_pattern = nil)
+      size = stamp_pattern.to_s.size
+      return [] if size > 0 and !(/\A[\d_]+\Z/ === stamp_pattern)
+
       results = []
 
-      case stamp_pattern.to_s.size
+      case size
       when "yyyymoddhhmiss_lll".size
         stamp = Timestamp.parse_s(stamp_pattern)
         if exist?(stamp)
@@ -315,6 +318,7 @@ module Textrepo
     # one file.
 
     def invoke_searcher_for_entries(searcher, pattern, entries)
+      return [] if entries.empty?
       output = []
 
       if entries.size > LIMIT_OF_FILES
