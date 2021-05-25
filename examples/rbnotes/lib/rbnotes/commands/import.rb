@@ -17,7 +17,7 @@ module Rbnotes
           begin
             repo.create(stamp, content)
             break               # success to create a note
-          rescue Textrepo::DuplicateTimestampError => e
+          rescue Textrepo::DuplicateTimestampError => _
             puts "A text with the timestamp [%s] has been already exists" \
                  " in the repository." % stamp
 
@@ -38,7 +38,7 @@ module Rbnotes
               puts "Try to create a note again with a new " \
                    "timestamp [%s]." % stamp
             end
-          rescue Textrepo::EmptyTextError => e
+          rescue Textrepo::EmptyTextError => _
             puts "... aborted."
             puts "The specified file is empyt."
             exit 1              # error

@@ -53,7 +53,7 @@ def assert_entries_pattern(pattern, num, conf)
   repo = Textrepo::FileSystemRepository.new(conf)
   entries = repo.entries(pattern)
   assert_equal num, entries.size
-  assert entries.reduce(false) {|r, e| r ||= e.to_s.include?(pattern)}
+  assert entries.reduce(false) {|r, e| r || e.to_s.include?(pattern)}
 end
 
 def assert_search(pattern, num, conf)

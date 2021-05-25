@@ -20,10 +20,6 @@ stamps = []
 
 files.each { |abspath|
   t = stamps.shift
-  yyyy = "%04d" % t.year
-  mm   = "%02d" % t.month
-  dd   = "%02d" % t.day
-  hhmmss = "%02d%02d%02d" % [t.hour, t.min, t.sec]
 
   dirname = File.expand_path(t.strftime("%Y/%m"), repo_path)
   basename = t.strftime("%Y%m%d%H%M%S")
