@@ -1,7 +1,6 @@
 # Textrepo
 
 [![Build Status](https://github.com/mnbi/textrepo/workflows/Build/badge.svg)](https://github.com/mnbi/textrepo/actions?query=workflow%3A"Build")
-[![CodeFactor](https://www.codefactor.io/repository/github/mnbi/textrepo/badge)](https://www.codefactor.io/repository/github/mnbi/textrepo)
 
 Textrepo is a repository to store a note with a timestamp.  Each note
 in the repository operates with the associated timestamp.
