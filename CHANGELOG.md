@@ -6,7 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 ### Fixed
-- remove codefactor badge from `README.md`.
+- Use ruby 3.3.5.
+- Remove codefactor badge from `README.md`.
 
 ## [0.5.9] - 2021-05-25
 ### Fixed
