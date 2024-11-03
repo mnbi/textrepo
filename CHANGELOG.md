@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
+### Fixed
+- remove codefactor badge from `README.md`.
 
 ## [0.5.9] - 2021-05-25
 ### Fixed
