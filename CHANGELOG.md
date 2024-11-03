@@ -5,7 +5,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
+
+## [0.5.10] - 2024-11-03
 ### Fixed
+- Fix issue #56: accept incomplete timestamp patterns.
 - Use ruby 3.3.5.
 - Remove codefactor badge from `README.md`.
 
