@@ -45,4 +45,14 @@ class TextrepoFileSystemRepositoryEntriesTest < Minitest::Test
   def test_it_can_get_a_list_with_a_yyyymo_pattern
     assert_entries_pattern("202001", 8, CONF_RO)
   end
+
+  # [issue #56]
+  def test_it_can_get_a_list_with_a_incomplete_pattern
+    #                                                     size of pattern
+    assert_entries_pattern("20200", 8, CONF_RO)         # 5
+    assert_entries_pattern("2020010", 8, CONF_RO)       # 7
+    assert_entries_pattern("202001010", 8, CONF_RO)     # 9
+    assert_entries_pattern("2020010101", 8, CONF_RO)    # 11
+    assert_entries_pattern("2020010101000", 8, CONF_RO) # 13
+  end
 end

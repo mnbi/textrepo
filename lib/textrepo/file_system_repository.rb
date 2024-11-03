@@ -192,7 +192,18 @@ module Textrepo
         if exist?(stamp)
           results << stamp
         end
-      when 0, "yyyymoddhhmiss".size, "yyyymodd".size, "yyyymo".size
+      when 0, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14
+        # 0 <--- ""
+        # 5 <--- "yyyy m" (incomplete)
+        # 6 <--- "yyyy mo"
+        # 7 <--- "yyyy mo d" (incomplete)
+        # 8 <--- "yyyy mo dd"
+        # 9 <--- "yyyy mo dd h" (incomplete)
+        # 10 <-- "yyyy mo dd hh"
+        # 11 <-- "yyyy mo dd hh m" (incomplete)
+        # 12 <-- "yyyy mo dd hh mm"
+        # 13 <-- "yyyy mo dd hh mm s" (incomplete)
+        # 14 <-- "yyyy mo dd hh mm ss"
         results += find_entries("#{stamp_pattern}*")
       when 4                    # "yyyy" or "modd"
         pat = nil
